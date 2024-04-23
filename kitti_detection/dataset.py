@@ -50,9 +50,9 @@ class KittiDetectionDataset(Dataset):
             'labels': torch.tensor(labels, dtype=torch.int),
             'boxes': BoundingBoxes(boxes, format='XYXY', canvas_size=transforms.functional.get_size(img)),
         }
-
+                
         if self.transform:
-            img = self.transform(img)
+            img, target = self.transform(img, target)
 
         return img, target
 
@@ -61,8 +61,13 @@ class KittiDetectionDataset(Dataset):
             class_labels = []
             boxes = []
             for line in label_file.readlines():
-                class_label, bbox = self._parse_object_line(line)
-                class_labels.append(class_label)
+                object_class, bbox = self._parse_object_line(line)
+
+                if object_class == 'DontCare':
+                    continue
+                
+                object_class = class_names.index(object_class)
+                class_labels.append(object_class)
                 boxes.append(bbox)
 
         return class_labels, boxes
@@ -70,7 +75,7 @@ class KittiDetectionDataset(Dataset):
     def _parse_object_line(self, line: str) -> tuple[int, tuple[float]]:
         elements = line.split()
 
-        object_class = class_names.index(elements[0])
+        object_class = elements[0]
         
         left, top, right, bottom = elements[4:8]
         bbox = (left, top, right, bottom)
