@@ -1,0 +1,2 @@
+TRAINING_IMAGE_DIR_PATH = '../data/data_object_image_2/training/image_2/'
+TRAINING_LABELS_DIR_PATH = '../data/data_object_label_2/training/label_2/'
