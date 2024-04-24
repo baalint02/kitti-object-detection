@@ -1,8 +1,10 @@
+from kitti_detection import config
+
 import os
 from typing import Optional, Callable, TypeAlias
 
 import torch
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, Subset, random_split
 from torchvision.io import read_image
 from torchvision.tv_tensors import BoundingBoxes
 from torchvision.transforms import v2 as transforms
@@ -83,3 +85,9 @@ class KittiDetectionDataset(Dataset):
         
         return object_class, bbox
     
+def load_train_val_test_dataset(split=[0.7, 0.15, 0.15]) -> tuple[Dataset, Dataset, Dataset]:
+    torch.random.manual_seed(42)
+    dataset = KittiDetectionDataset(image_dir_path=config.DATA_IMAGE_DIR_PATH, label_dir_path=config.DATA_LABEL_DIR_PATH)
+
+    train, val, test = random_split(dataset, lengths=split)
+    return train, val, test
