@@ -1,8 +1,10 @@
+from kitti_detection import config
+
 import os
 from typing import Optional, Callable, TypeAlias
 
 import torch
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, Subset, random_split
 from torchvision.io import read_image
 from torchvision.tv_tensors import BoundingBoxes
 from torchvision.transforms import v2 as transforms
@@ -26,6 +28,7 @@ class KittiDetectionDataset(Dataset):
     def __init__(self,
                  image_dir_path: str,
                  label_dir_path: str,
+                 idx_range: Optional[range] = None,
                  transform: Optional[Callable] = None):
         
         assert os.path.isdir(image_dir_path)
@@ -33,15 +36,14 @@ class KittiDetectionDataset(Dataset):
 
         self.image_dir_path = image_dir_path
         self.label_dir_path = label_dir_path
+        self.indices = idx_range or range(0, len(os.listdir(image_dir_path)))
         self.transform = transform
 
-        self.n_samples = len(os.listdir(image_dir_path))
-
     def __len__(self) -> int:
-        return self.n_samples
+        return len(self.indices)
 
     def __getitem__(self, index: int) -> DataSample:
-        filename = f'{index:06d}'
+        filename = f'{self.indices[index]:06d}'
 
         img = read_image(os.path.join(self.image_dir_path, filename + '.png'))
         labels, boxes = self._read_labels(os.path.join(self.label_dir_path, filename + '.txt'))
@@ -83,3 +85,12 @@ class KittiDetectionDataset(Dataset):
         
         return object_class, bbox
     
+def load_train_val_test_dataset(split=(0.7, 0.15, 0.15)) -> tuple[KittiDetectionDataset, KittiDetectionDataset, KittiDetectionDataset]:
+    n_samples = len(os.listdir(config.DATA_IMAGE_DIR_PATH))
+    train_end = round(n_samples * split[0])
+    val_end = round(n_samples * (split[0] + split[1]))
+
+    train = KittiDetectionDataset(config.DATA_IMAGE_DIR_PATH, config.DATA_LABEL_DIR_PATH, idx_range=range(0, train_end))
+    val = KittiDetectionDataset(config.DATA_IMAGE_DIR_PATH, config.DATA_LABEL_DIR_PATH, idx_range=range(train_end,  val_end))
+    test = KittiDetectionDataset(config.DATA_IMAGE_DIR_PATH, config.DATA_LABEL_DIR_PATH, idx_range=range(val_end,  n_samples))
+    return train, val, test
