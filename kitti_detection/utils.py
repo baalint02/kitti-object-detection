@@ -32,7 +32,7 @@ def display_samples_v(samples):
 def display_samples_h(samples):
     plt.rcParams["savefig.bbox"] = 'tight'
 
-    bb_colors = ['blue', 'yellow', 'green', 'red', 'orange'] * 12
+    bb_colors = ['blue', 'yellow', 'green', 'red', 'orange'] * 16
     
     if not isinstance(samples, tuple):
         samples = (samples)
