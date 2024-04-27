@@ -21,6 +21,7 @@ class_names = (
     'DontCare',
 )
 
+# tuple of 1. tensor of image 2. dictionary: keys -> 'labels', 'boxes' ; values -> tensor of label indices, BoundingBoxes of boxes
 DataSample: TypeAlias = tuple[torch.Tensor, dict[str, torch.Tensor]]
 
 class KittiDetectionDataset(Dataset):
@@ -86,6 +87,7 @@ class KittiDetectionDataset(Dataset):
         return object_class, bbox
     
 def load_train_val_test_dataset(split=(0.7, 0.15, 0.15)) -> tuple[KittiDetectionDataset, KittiDetectionDataset, KittiDetectionDataset]:
+    print(config.DATA_IMAGE_DIR_PATH)
     n_samples = len(os.listdir(config.DATA_IMAGE_DIR_PATH))
     train_end = round(n_samples * split[0])
     val_end = round(n_samples * (split[0] + split[1]))

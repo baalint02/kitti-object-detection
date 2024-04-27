@@ -9,7 +9,7 @@ from torchvision.utils import draw_bounding_boxes
 def display_samples_v(samples):
     plt.rcParams["savefig.bbox"] = 'tight'
 
-    bb_colors = ['blue', 'yellow', 'green', 'red', 'orange'] * 8
+    bb_colors = ['blue', 'yellow', 'green', 'red', 'orange'] * 12
     
     if not isinstance(samples, tuple):
         samples = (samples)
@@ -32,7 +32,7 @@ def display_samples_v(samples):
 def display_samples_h(samples):
     plt.rcParams["savefig.bbox"] = 'tight'
 
-    bb_colors = ['blue', 'yellow', 'green', 'red', 'orange'] * 8
+    bb_colors = ['blue', 'yellow', 'green', 'red', 'orange'] * 12
     
     if not isinstance(samples, tuple):
         samples = (samples)
