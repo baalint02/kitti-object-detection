@@ -20,7 +20,7 @@ def display_samples_v(samples):
     plt.tight_layout()
     for i, sample in enumerate(samples):
         img, target = sample
-        labels = [ class_names[label.item()] for label in target['labels'] ]
+        labels = [ class_names[label.item() - 1] for label in target['labels'] ]
 
         img = img.detach()
         img = img.to(torch.uint8)
@@ -44,13 +44,18 @@ def display_samples_h(samples):
     plt.tight_layout()
     for i, sample in enumerate(samples):
         img, target = sample
-        labels = [ class_names[label.item()] for label in target['labels'] ]
+        labels = [ class_names[label.item() - 1] for label in target['labels'] ]
 
         img = img.detach()
         img = img.to(torch.uint8)
-        img = draw_bounding_boxes(img, boxes=target['boxes'], labels=labels, colors=bb_colors, width=3)
-        img = F.to_pil_image(img)
-        axs[0, i].imshow(np.asarray(img))
-        axs[0, i].set(xticklabels=[], yticklabels=[], xticks=[], yticks=[])
+        
+        if target['boxes'].ndim == 1:
+            print(f"Target box with wrong dimensionality: {target['boxes']}")
+
+        else:
+            img = draw_bounding_boxes(img, boxes=target['boxes'], labels=labels, colors=bb_colors, width=3)
+            img = F.to_pil_image(img)
+            axs[0, i].imshow(np.asarray(img))
+            axs[0, i].set(xticklabels=[], yticklabels=[], xticks=[], yticks=[])
     
     plt.show()
