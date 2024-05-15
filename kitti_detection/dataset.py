@@ -49,7 +49,7 @@ class KittiDetectionDataset(Dataset):
         labels, boxes = self._read_labels(os.path.join(self.label_dir_path, filename + '.txt'))
 
         target = {
-            'labels': torch.tensor(labels, dtype=torch.int),
+            'labels': torch.tensor(labels, dtype=torch.long),
             'boxes': BoundingBoxes(boxes, format='XYXY', canvas_size=transforms.functional.get_size(img)),
         }
                 
