@@ -22,6 +22,18 @@ class_names = (
     'DontCare',
 )
 
+class_counts = {
+    'Car': 8297, 
+    'Van': 881, 
+    'Truck': 343, 
+    'Pedestrian': 1034, 
+    'Person_sitting': 44, 
+    'Cyclist': 374, 
+    'Tram': 140, 
+    'Misc': 251, 
+    'DontCare': 0
+}
+
 # tuple of 1. tensor of image 2. dictionary: keys -> 'labels', 'boxes' ; values -> tensor of label indices, BoundingBoxes of boxes
 DataSample: TypeAlias = tuple[torch.Tensor, dict[str, torch.Tensor]]
 
