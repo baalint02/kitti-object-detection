@@ -5,7 +5,15 @@ import matplotlib.pyplot as plt
 
 import torch
 import torchvision.transforms.functional as F
+from torchvision.transforms import v2
 from torchvision.utils import draw_bounding_boxes
+
+
+mean = [0.485, 0.456, 0.406]
+std = [0.229, 0.224, 0.225]
+
+denormalize = v2.Normalize(mean=[-m/s for m, s in zip(mean, std)], std=[1/s for s in std])
+
 
 def display_samples_v(samples):
     plt.rcParams["savefig.bbox"] = 'tight'
@@ -47,6 +55,8 @@ def display_samples_h(samples):
         labels = [ class_names[label.item() - 1] for label in target['labels'] ]
 
         img = img.detach()
+        img = denormalize(img)
+        img = img * 255
         img = img.to(torch.uint8)
         
         if target['boxes'].ndim == 1:

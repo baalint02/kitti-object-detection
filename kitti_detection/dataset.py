@@ -6,6 +6,7 @@ from typing import Optional, Callable, TypeAlias
 import torch
 from torch.utils.data import Dataset, Subset, random_split
 from torchvision.io import read_image
+from PIL import Image 
 from torchvision.tv_tensors import BoundingBoxes
 from torchvision.transforms import v2 as transforms
 
@@ -46,7 +47,11 @@ class KittiDetectionDataset(Dataset):
     def __getitem__(self, index: int) -> DataSample:
         filename = f'{self.indices[index]:06d}'
 
-        img = read_image(os.path.join(self.image_dir_path, filename + '.png'))
+        #img = read_image(os.path.join(self.image_dir_path, filename + '.png'))
+        
+        
+        img = Image.open(os.path.join(self.image_dir_path, filename + '.png'))
+        
         labels, boxes = self._read_labels(os.path.join(self.label_dir_path, filename + '.txt'))
 
         target = {
