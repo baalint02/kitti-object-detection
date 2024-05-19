@@ -3,7 +3,7 @@ from kitti_detection.dataset import DataSample, class_names
 import numpy as np
 import matplotlib.pyplot as plt
 
-import torchvision.transforms.functional as F
+import torchvision.transforms.v2.functional as F
 from torchvision.utils import draw_bounding_boxes
 
 def display_samples_v(samples):
@@ -45,7 +45,9 @@ def display_samples_h(samples):
         labels = [ class_names[label.item()] for label in target['labels'] ]
 
         img = img.detach()
-        img = draw_bounding_boxes(img, boxes=target['boxes'], labels=labels, colors=bb_colors, width=3)
+        boxes = target['boxes']
+        boxes = F.convert_bounding_box_format(boxes, new_format='xyxy')
+        img = draw_bounding_boxes(img, boxes=boxes, labels=labels, colors=bb_colors, width=3)
         img = F.to_pil_image(img)
         axs[0, i].imshow(np.asarray(img))
         axs[0, i].set(xticklabels=[], yticklabels=[], xticks=[], yticks=[])
