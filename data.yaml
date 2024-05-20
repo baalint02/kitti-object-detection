@@ -1,0 +1,26 @@
+train: /data/yolo_images/train
+val: /data/yolo_images/valid
+test: /data/yolo_images/test
+
+train:
+  images: /data/yolo_images/train
+  labels: /data/yolo_labels/train
+val:
+  images: data/yolo_images/valid
+  labels: /data/yolo_labels/valid
+test:
+  images: data/yolo_images/test
+  labels: /data/yolo_labels/test
+
+nc: 9 
+
+names: 
+  0: Car
+  1: Van
+  2: Truck
+  3: Pedestrian
+  4: Person_sitting
+  5: Cyclist
+  6: Tram
+  7: Misc
+  8: DontCare
