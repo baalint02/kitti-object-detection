@@ -1,14 +1,18 @@
 from kitti_detection import config
 
 import os
+import numpy as np
+from torch import Tensor
+import cv2
 from typing import Optional, Callable, TypeAlias
 
 import torch
 from torch.utils.data import Dataset, Subset, random_split
 from torchvision.io import read_image
-from PIL import Image 
 from torchvision.tv_tensors import BoundingBoxes
 from torchvision.transforms import v2 as transforms
+from PIL import Image 
+
 
 class_names = (
     'Car',
@@ -52,6 +56,7 @@ class KittiDetectionDataset(Dataset):
         self.label_dir_path = label_dir_path
         self.indices = idx_range or range(0, len(os.listdir(image_dir_path)))
         self.transform = transform
+        self.roi_proposals = None
 
     def __len__(self) -> int:
         return len(self.indices)
@@ -60,10 +65,9 @@ class KittiDetectionDataset(Dataset):
         filename = f'{self.indices[index]:06d}'
 
         #img = read_image(os.path.join(self.image_dir_path, filename + '.png'))
-        
-        
         img = Image.open(os.path.join(self.image_dir_path, filename + '.png'))
-        
+
+
         labels, boxes = self._read_labels(os.path.join(self.label_dir_path, filename + '.txt'))
 
         target = {
@@ -113,3 +117,6 @@ def load_train_val_test_dataset(split=(0.7, 0.15, 0.15)) -> tuple[KittiDetection
     val = KittiDetectionDataset(config.DATA_IMAGE_DIR_PATH, config.DATA_LABEL_DIR_PATH, idx_range=range(train_end,  val_end))
     test = KittiDetectionDataset(config.DATA_IMAGE_DIR_PATH, config.DATA_LABEL_DIR_PATH, idx_range=range(val_end,  n_samples))
     return train, val, test
+
+
+
