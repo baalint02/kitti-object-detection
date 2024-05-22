@@ -78,7 +78,7 @@ def display_one(img: torch.Tensor, boxes: torch.Tensor, labels: torch.Tensor):
     if not labels.shape[0] == boxes.shape[0]:
         labels = ['0'] * boxes.shape[0]
     else:
-        labels = [ class_names[label.item()] for label in labels ]
+        labels = [ class_names[label.item() - 1] for label in labels ]
 
     print(labels)
     print(type(bb_colors))
