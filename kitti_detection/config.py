@@ -1,4 +1,4 @@
-DATA_IMAGE_DIR_PATH = '/data/image/train'
-DATA_LABEL_DIR_PATH = '/data/label/train'
+DATA_IMAGE_DIR_PATH = '/artifacts/data/image/'
+DATA_LABEL_DIR_PATH = '/artifacts/data/label/'
 
-CURRENT_MODEL_PATH = '/home/baalint/model/kitti.model'
+CURRENT_MODEL_PATH = '/artifacts/kitti.model'

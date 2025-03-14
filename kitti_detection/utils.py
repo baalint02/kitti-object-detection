@@ -22,7 +22,9 @@ def display_samples_v(samples):
         labels = [ class_names[label.item()] for label in target['labels'] ]
 
         img = img.detach()
-        img = draw_bounding_boxes(img, boxes=target['boxes'], labels=labels, colors=bb_colors, width=3)
+        boxes = target['boxes']
+        boxes = F.convert_bounding_box_format(boxes, new_format='xyxy')
+        img = draw_bounding_boxes(img, boxes=boxes, labels=labels, colors=bb_colors, width=3)
         img = F.to_pil_image(img)
         axs[i, 0].imshow(np.asarray(img))
         axs[i, 0].set(xticklabels=[], yticklabels=[], xticks=[], yticks=[])
